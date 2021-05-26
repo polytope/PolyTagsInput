@@ -118,4 +118,42 @@ describe('PolyTagsInput', () => {
         polyTag.remove(1)
         polyTag.add('Third Tag')
     });
+
+    it('should add content of input field when hitting enter', () => {
+        element.value = "some tag typed in field"
+        hitEnter(element)
+        expect(polyTag.value).toEqual(["some tag typed in field"])
+    });
+
+    it('should clear input field after hitting enter', () => {
+        element.value = "some tag typed in field"
+        hitEnter(element)
+        expect(element.value).toBe('')
+    })
+
+    it('should add contet of input field when hitting tab', () => {
+        element.value = "some tag typed in field using tab"
+        hitTab(element)
+        expect(polyTag.value).toEqual(["some tag typed in field using tab"])
+    })
+
+    it('should clear input field after hitting tab', () => {
+        element.value = "some tag typed in field using tab"
+        hitTab(element)
+        expect(element.value).toBe('')
+    })
+
+    function hitEnter(element: HTMLInputElement) {
+        const event = new KeyboardEvent('keydown', {
+            key: 'Enter'
+        })
+        element.dispatchEvent(event);
+    }
+
+    function hitTab(element: HTMLInputElement) {
+        const event = new KeyboardEvent('keydown', {
+            key: 'Tab'
+        })
+        element.dispatchEvent(event);
+    }
 });

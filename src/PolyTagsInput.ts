@@ -20,6 +20,7 @@ export class PolyTagsInput {
     constructor(element: HTMLInputElement) {
         this.element = element;
         this.tags = [];
+        this.element.addEventListener("keydown", this.onKeyDown.bind(this))
     }
 
     public add(... tags: string[]): void {
@@ -33,5 +34,13 @@ export class PolyTagsInput {
         }
         this.tags.splice(index, 1)
         this.onValueChangedCallback(this.value)
+    }
+
+    private onKeyDown(event: KeyboardEvent) {
+        if (event.key === 'Enter' || event.key === 'Tab') {
+            event.preventDefault()
+            this.add(this.element.value)
+            this.element.value = ''
+        }
     }
 }
