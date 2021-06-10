@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Vite App</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        width: 100vw;
+        height: 100vh;
+        display: grid;
+        justify-content: center;
+        align-content: center;
+        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+      }
+      #wrapper {
+        width: 800px;
+        border: #2c3e50 1px solid;
+        padding: 10px;
+        border-radius: 10px;
+        display: flex;
+        column-gap: 5px;
+        row-gap: 5px;
+        flex-flow: wrap;
+      }
+
+      #wrapper span {
+        color: white;
+        padding: .2em .6em .3em;
+        font-size: 75%;
+        font-weight: 700;
+        line-height: 1;
+        text-align: center;
+        white-space: nowrap;
+        vertical-align: baseline;
+        border-radius: .25em;
+        background-color: #5bc0de;
+        margin-right: 2px;
+        order: 0;
+      }
+
+      #wrapper span button {
+        background: none;
+        color: inherit;
+        border: none;
+        padding: 0;
+        font: inherit;
+        cursor: pointer;
+        outline: inherit;
+      }
+      #wrapper input {
+        border: none;
+        box-shadow: none;
+        outline: none;
+        background-color: transparent;
+        padding: 0 6px;
+        margin: 0;
+        width: auto;
+        max-width: inherit;
+        order: 1;
+      }
+    </style>
+  </head>
+  <body>
+  <div id="wrapper">
+    <input type="text" id="textField">
+  </div>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
