@@ -2,17 +2,40 @@ import './style.css'
 import {PolyTagsInput} from "../../dist/PolyTagsInput";
 
 const field = document.querySelector<HTMLInputElement>('#textField')!
-const wrapper = document.querySelector<HTMLUListElement>('#wrapper')!
-
+const fieldWrapper = document.querySelector<HTMLInputElement>('#textFieldWrapper')!
+const wrapper = document.querySelector<HTMLDivElement>('#wrapper')!
+const typeAheadBox = document.querySelector<HTMLDivElement>('#typeahead')!;
 
 const tagLine = new PolyTagsInput(field)
 tagLine.add('Polytope', 'Tagable', 'InputField');
+tagLine.setTypeaheads('Polytope', 'PolyTag', 'Tagable', 'InputField');
 tagLine.onValueChanged = setTags;
+tagLine.typeahead = typeAhead;
 
 setTags(tagLine.value)
 
+let currentHoveredSelection: number | null = null;
+
+field.addEventListener('keydown', (e: KeyboardEvent) => {
+    if (typeAheadBox.classList.contains('hidden')) return;
+
+    if (e.key == 'ArrowUp' || e.key == 'ArrowDown') {
+       handleTypeaheadNavigation(e);
+    }
+
+})
+
+function typeAhead(suggestions: string[] | null) {
+    console.log(suggestions)
+    if (suggestions == null) {
+        removeSuggestions()
+    } else {
+        showSuggestions(suggestions);
+    }
+}
+
 function setTags(tags: string[]): void {
-    while (wrapper.lastChild != field) {
+    while (wrapper.lastChild != fieldWrapper) {
         wrapper.removeChild(wrapper.lastChild!!)
     }
     tags.forEach((tag: string, index: number) => {
@@ -27,3 +50,70 @@ function setTags(tags: string[]): void {
     })
 }
 
+function removeSuggestions() {
+    typeAheadBox.classList.add('hidden');
+    typeAheadBox.innerHTML = '';
+    currentHoveredSelection = null;
+}
+
+function showSuggestions(suggestions: string[]) {
+    typeAheadBox.innerHTML = '';
+    typeAheadBox.classList.remove('hidden')
+    suggestions.forEach(suggestion => {
+        const newDiv = document.createElement('div');
+        newDiv.classList.add('suggestion')
+        newDiv.onclick = () => {
+            tagLine.add(suggestion);
+            field.value = '';
+            removeSuggestions();
+        }
+        newDiv.innerText = suggestion;
+        typeAheadBox.appendChild(newDiv);
+    })
+}
+
+function handleTypeaheadNavigation(e: KeyboardEvent) {
+    e.preventDefault()
+
+    currentHoveredSelection = setCurrentHoveredIndex(e.key);
+
+    removeTypeaheadHoverState();
+    selectTypeaheadSelection(currentHoveredSelection);
+}
+
+function setCurrentHoveredIndex(key: string): number {
+    let currentIndex = currentHoveredSelection;
+    if (currentIndex != null) {
+        if (key == 'ArrowUp') {
+            currentIndex--;
+        } else if (key == 'ArrowDown') {
+            currentIndex++;
+        }
+    } else {
+        currentIndex = 0;
+    }
+
+    currentIndex = ensureWrapAround(currentIndex);
+
+    return currentIndex;
+}
+
+function ensureWrapAround(currentIndex: number): number {
+    if (currentIndex + 1 > typeAheadBox.children.length) {
+        return 0;
+    } else if (currentIndex < 0) {
+        return typeAheadBox.children.length - 1
+    } else {
+        return currentIndex;
+    }
+}
+
+function removeTypeaheadHoverState() {
+    Array.from(typeAheadBox.children).forEach(child => child.classList.remove('hover'))
+}
+
+function selectTypeaheadSelection(currentHoveredSelection: number) {
+    const item = typeAheadBox.children.item(currentHoveredSelection)!;
+    item.classList.add('hover')
+    field.value = item.innerHTML;
+}

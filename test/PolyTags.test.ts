@@ -143,17 +143,162 @@ describe('PolyTagsInput', () => {
         expect(element.value).toBe('')
     })
 
+    it('should delete last item when hitting backspace on empty input field', () => {
+        polyTag.add('something', 'something else');
+
+        hitBackspace(element)
+
+        expect(polyTag.value).toEqual(['something'])
+    });
+
+    it('should not delete anything if hitting backspace while input field is non empty', () => {
+        polyTag.add('something', 'something else');
+
+        element.value = "Hello World!"
+        hitBackspace(element)
+
+        expect(polyTag.value).toEqual(['something', 'something else'])
+    });
+
+    it('should show typeaheads when typing in input field', (done: DoneCallback) => {
+        polyTag.setTypeaheads('John', 'Jane', 'Doe');
+
+        polyTag.typeahead = (suggestions: string[] | null) => {
+            expect(suggestions).toEqual(['John', 'Jane'])
+            done();
+        }
+        sendKey(element, 'J')
+    });
+
+   it('should send null for typeaheads if inputField is emptied', (done: DoneCallback) => {
+        polyTag.setTypeaheads('John', 'Jane', 'Doe');
+        let count = 0;
+        polyTag.typeahead = (suggestions: string[] | null) => {
+            if (count == 1) {
+                expect(element.value).toEqual('')
+                expect(suggestions).toEqual(null)
+                done();
+            }
+            count++;
+        }
+        sendKey(element, 'J')
+        hitBackspace(element);
+    });
+
+   it('should allow for setting tags to be distinct', () => {
+       polyTag.setDistinct = true;
+
+       polyTag.add('Polytope', 'is', 'awesome', 'Polytope')
+
+       expect(polyTag.value).toEqual(['Polytope', 'is', 'awesome'])
+   })
+
+    it('should count distinct items when set to distinct', () => {
+        polyTag.setDistinct = true;
+
+        polyTag.add('Polytope', 'is', 'awesome', 'Polytope')
+
+        expect(polyTag.size).toEqual(3)
+    })
+
+    it('should not add the duplicated tags to the onValueChanged callback, when set to distinct', (done: DoneCallback) => {
+        let count = 0;
+        polyTag.onValueChanged = (value: string[]) => {
+            if (count == 0) {
+                expect(value).toEqual(['some tag'])
+            } else if (count == 1) {
+                expect(value).toEqual(['some tag'])
+            } else {
+                expect(value).toEqual(['some tag', 'some other tag'])
+                done();
+            }
+            count++;
+        }
+        polyTag.setDistinct = true;
+
+        polyTag.add('some tag')
+        polyTag.add('some tag')
+        polyTag.add('some other tag')
+    })
+
+    it('should restream on onValueChanged callback, when changing the state of distinct', function (done: DoneCallback) {
+        let count = 0;
+        polyTag.onValueChanged = (value: string[]) => {
+            if (count == 0) {
+                expect(value).toEqual(['some tag'])
+            } else if (count == 1) {
+                expect(value).toEqual(['some tag', 'some tag'])
+            } else if (count == 2)  {
+                expect(value).toEqual(['some tag', 'some tag', 'some other tag'])
+            } else if (count == 3)  {
+                expect(value).toEqual(['some tag', 'some other tag'])
+            } else if (count == 4)  {
+                expect(value).toEqual(['some tag', 'some other tag'])
+            } else if (count == 5)  {
+                expect(value).toEqual(['some tag', 'some tag', 'some other tag', 'some other tag'])
+                done();
+            }
+            count++;
+        }
+        polyTag.add('some tag')
+        polyTag.add('some tag')
+        polyTag.add('some other tag')
+        polyTag.setDistinct = true
+        polyTag.add('some other tag')
+        polyTag.setDistinct = false
+    });
+
+   it("should disregard character case when looking for typeaheads", (done: DoneCallback) => {
+       polyTag.setTypeaheads('Polytope', 'poLyTag')
+       polyTag.typeahead = (value: string[] | null) => {
+           expect(value).toEqual(['Polytope', 'poLyTag']);
+           done();
+       }
+       sendKey(element, 'poly')
+   })
+
+    it('should do nothing when strict-mode is activated, and trying to add a tag not part of the typeaheads', () => {
+        polyTag.setTypeaheads('Polytope', 'poLyTag')
+        polyTag.strict = true
+        element.value = "some tag typed in field using tab"
+        hitTab(element)
+
+        expect(polyTag.value).toEqual([])
+    })
+
     function hitEnter(element: HTMLInputElement) {
-        const event = new KeyboardEvent('keydown', {
-            key: 'Enter'
-        })
-        element.dispatchEvent(event);
+        sendKey(element, 'Enter', false);
     }
 
     function hitTab(element: HTMLInputElement) {
-        const event = new KeyboardEvent('keydown', {
-            key: 'Tab'
+        sendKey(element, 'Tab', false);
+    }
+
+    function hitBackspace(element: HTMLInputElement) {
+        if (element.value.length > 0) {
+            element.value = element.value.slice(0, -1)
+        }
+
+        sendKey(element, 'Backspace', false);
+    }
+
+    function sendKey(element: HTMLInputElement, key: string, sendAsInput = true) {
+        const keydownEvent = new KeyboardEvent('keydown', {
+            key: key
         })
-        element.dispatchEvent(event);
+
+        element.dispatchEvent(keydownEvent);
+
+        if (sendAsInput) {
+            element.value += key;
+            const inputEvent = new InputEvent('insertText', {
+                data: key
+            })
+
+            element.dispatchEvent(inputEvent);
+        }
+
+        element.dispatchEvent(new Event("change"))
+        element.dispatchEvent(new Event("input"))
     }
 });

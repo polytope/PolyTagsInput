@@ -63,13 +63,48 @@
         margin: 0;
         width: auto;
         max-width: inherit;
+      }
+
+      #textFieldWrapper {
+        position: relative;
         order: 1;
       }
+
+      #typeahead {
+        position: absolute;
+        top: 20px;
+        border: #2c3e50 1px solid;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+        background: white;
+        min-width: 100%;
+        min-height: 10px;
+        display: flex;
+        flex-direction: column;
+        border-radius: 10px;
+      }
+
+      .hidden {
+        display: none!important;
+      }
+
+      .suggestion {
+        padding: 10px;
+      }
+
+      .suggestion:hover, .suggestion.hover {
+        background: #5bc0de;
+        color: white;
+      }
+
     </style>
   </head>
   <body>
   <div id="wrapper">
-    <input type="text" id="textField">
+    <div id="textFieldWrapper">
+      <input type="text" id="textField">
+      <div id="typeahead" class="hidden">
+      </div>
+    </div>
   </div>
 
     <script type="module" src="/src/main.ts"></script>

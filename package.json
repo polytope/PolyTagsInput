@@ -16,6 +16,7 @@
   "scripts": {
     "build:example": "tsc && cd example && npm install && cd ..",
     "start:example": "cd example && npm run dev && cd ..",
+    "start": "npm run build:example && npm run start:example",
     "build": "tsc",
     "test": "jest"
   },
