@@ -186,7 +186,7 @@ describe('PolyTagsInput', () => {
     });
 
    it('should allow for setting tags to be distinct', () => {
-       polyTag.setDistinct = true;
+       polyTag.distinct = true;
 
        polyTag.add('Polytope', 'is', 'awesome', 'Polytope')
 
@@ -194,7 +194,7 @@ describe('PolyTagsInput', () => {
    })
 
     it('should count distinct items when set to distinct', () => {
-        polyTag.setDistinct = true;
+        polyTag.distinct = true;
 
         polyTag.add('Polytope', 'is', 'awesome', 'Polytope')
 
@@ -205,8 +205,10 @@ describe('PolyTagsInput', () => {
         let count = 0;
         polyTag.onValueChanged = (value: string[]) => {
             if (count == 0) {
-                expect(value).toEqual(['some tag'])
+                expect(value).toEqual([])
             } else if (count == 1) {
+                expect(value).toEqual(['some tag'])
+            } else if (count == 2) {
                 expect(value).toEqual(['some tag'])
             } else {
                 expect(value).toEqual(['some tag', 'some other tag'])
@@ -214,7 +216,7 @@ describe('PolyTagsInput', () => {
             }
             count++;
         }
-        polyTag.setDistinct = true;
+        polyTag.distinct = true;
 
         polyTag.add('some tag')
         polyTag.add('some tag')
@@ -243,9 +245,9 @@ describe('PolyTagsInput', () => {
         polyTag.add('some tag')
         polyTag.add('some tag')
         polyTag.add('some other tag')
-        polyTag.setDistinct = true
+        polyTag.distinct = true
         polyTag.add('some other tag')
-        polyTag.setDistinct = false
+        polyTag.distinct = false
     });
 
    it("should disregard character case when looking for typeaheads", (done: DoneCallback) => {
@@ -265,6 +267,83 @@ describe('PolyTagsInput', () => {
 
         expect(polyTag.value).toEqual([])
     })
+
+    it('should not add the non allowed tags to the onValueChanged callback, when set to strict', (done: DoneCallback) => {
+        let count = 0;
+        polyTag.onValueChanged = (value: string[]) => {
+            if (count == 0) {
+                expect(value).toEqual([])
+            } else if (count == 1) {
+                expect(value).toEqual(['some tag'])
+            }  else {
+                expect(value).toEqual(['some tag'])
+                done();
+            }
+            count++;
+        }
+        polyTag.setTypeaheads('some tag');
+        polyTag.strict = true;
+
+        polyTag.add('some tag')
+        polyTag.add('some other tag')
+    })
+
+    it('should allow for both strict and distinct', function (done: DoneCallback) {
+        polyTag.setTypeaheads('some tag', 'some other tag');
+        polyTag.strict = true;
+        polyTag.distinct = true;
+
+        let count = 0;
+        polyTag.onValueChanged = (tags: string[]|null) => {
+            if (count == 0) {
+                expect(tags).toEqual(['some tag'])
+            } else if (count == 1) {
+                expect(tags).toEqual(['some tag'])
+            }  else if (count == 2) {
+                expect(tags).toEqual(['some tag', 'some other tag'])
+            }  else if (count == 3) {
+                expect(tags).toEqual(['some tag', 'some other tag'])
+            }  else {
+                expect(tags).toEqual(['some tag', 'some other tag'])
+                expect(polyTag.value).toEqual(['some tag', 'some other tag'])
+                done();
+            }
+            count++;
+        }
+
+        polyTag.add('some tag')
+        polyTag.add('some tag')
+        polyTag.add('some other tag')
+        polyTag.add('some other tag')
+        polyTag.add('THIS SHOULD NOT SHOW')
+    });
+
+    it('should allow for switching strict mode, with out data loss', function (done: DoneCallback) {
+        polyTag.setTypeaheads('some tag', 'some other tag');
+        polyTag.add('some tag')
+        polyTag.add('some other tag')
+        polyTag.add('UNKNOWN TAG')
+
+        let count = 0;
+        polyTag.onValueChanged = (tags: string[]|null) => {
+            if (count == 0) {
+                expect(tags).toEqual(['some tag', 'some other tag'])
+                expect(polyTag.value).toEqual(['some tag', 'some other tag'])
+            } else if (count == 1) {
+                expect(tags).toEqual(['some tag', 'some other tag', 'UNKNOWN TAG'])
+                expect(polyTag.value).toEqual(['some tag', 'some other tag', 'UNKNOWN TAG'])
+            } else {
+                expect(tags).toEqual(['some tag', 'some other tag'])
+                expect(polyTag.value).toEqual(['some tag', 'some other tag'])
+                done();
+            }
+            count++;
+        }
+
+        polyTag.strict = true
+        polyTag.strict = false
+        polyTag.strict = true
+    });
 
     function hitEnter(element: HTMLInputElement) {
         sendKey(element, 'Enter', false);

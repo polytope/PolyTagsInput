@@ -2,15 +2,19 @@ export class PolyTagsInput {
     private tags: string[];
     private onValueChangedCallback: (value: string[]) => void = (_) => {};
     private onTypeaheadCallback: (suggestions: string[] | null) => void = (_) => {};
-    private distinct = false;
+    private _distinct = false;
     private typeaheads: string[] = [];
+    private _strict = false;
 
     public readonly element: HTMLInputElement;
 
-    public strict = false;
+    public set strict(value: boolean) {
+        this._strict = value;
+        this.onValueChangedCallback(this.value);
+    };
 
-    public set setDistinct(value: boolean) {
-        this.distinct = value;
+    public set distinct(value: boolean) {
+        this._distinct = value;
         this.onValueChangedCallback(this.value);
     }
 
@@ -29,9 +33,15 @@ export class PolyTagsInput {
     public get value() {
         let ret = [... this.tags];
 
-        if (this.distinct) {
+        if (this._distinct) {
             ret = ret.filter((tag, index, self) => {
                 return index === self.indexOf(tag);
+            })
+        }
+
+        if (this._strict) {
+            ret = ret.filter((tag: string) => {
+                return this.typeaheads.indexOf(tag) > -1;
             })
         }
 
@@ -46,11 +56,7 @@ export class PolyTagsInput {
     }
 
     public add(... tags: string[]): void {
-        if (this.strict) {
-           this.strictAdd(tags);
-        } else {
-           this.normalAdd(tags);
-        }
+        this.tags.push(...tags);
         this.onTypeaheadCallback(null);
         this.onValueChangedCallback(this.value)
     }
@@ -87,17 +93,5 @@ export class PolyTagsInput {
         } else {
             this.onTypeaheadCallback(null);
         }
-    }
-
-    private strictAdd(tags: string[]): void {
-        tags.forEach(tag => {
-           if (this.typeaheads.indexOf(tag) > -1) {
-               this.add(tag)
-           }
-        });
-    }
-
-    private normalAdd(tags: string[]) {
-        this.tags.push(...tags);
     }
 }
