@@ -1,0 +1,10 @@
+{
+  "name": "@polytope/poly-tags-input",
+  "version": "0.0.5",
+  "homepage": "https://github.com/polytope/PolyTagsInput",
+  "peerDependencies": {},
+  "main": "poly-tags-input.js",
+  "typings": "poly-tags-input.d.ts",
+  "sideEffects": false,
+  "dependencies": {}
+}

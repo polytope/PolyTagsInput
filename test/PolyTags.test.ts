@@ -1,4 +1,4 @@
-import PolyTagsInput from "../src/PolyTagsInput";
+import PolyTagsInput from "../src/poly-tags-input";
 import DoneCallback = jest.DoneCallback;
 
 describe('PolyTagsInput', () => {
