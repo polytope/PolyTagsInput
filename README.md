@@ -1,6 +1,6 @@
 # PolyTagsInput
 
-[![Node.js CI](https://github.com/polytope/PolyTagsInput/actions/workflows/node.js.yml/badge.svg)](https://github.com/polytope/PolyTagsInput/actions/workflows/node.js.yml)
+[![Test & Build](https://github.com/polytope/PolyTagsInput/actions/workflows/node.js.yml/badge.svg)](https://github.com/polytope/PolyTagsInput/actions/workflows/node.js.yml)
 
 A simple Javascript package for creating tags-input fields. 
 This package contains only the behaviour of a tags-input field, all UI/UX is up to you to create.
