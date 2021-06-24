@@ -1,5 +1,5 @@
 import './style.css'
-import PolyTagsInput from "../../dist/PolyTagsInput";
+import PolyTagsInput from "../../dist";
 
 const field = document.querySelector<HTMLInputElement>('#textField')!
 const fieldWrapper = document.querySelector<HTMLInputElement>('#textFieldWrapper')!

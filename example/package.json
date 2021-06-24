@@ -11,6 +11,6 @@
     "vite": "^2.3.7"
   },
   "dependencies": {
-    "PolyTagInput": "file:.."
+    "PolyTagInput": "file:../dist"
   }
 }
