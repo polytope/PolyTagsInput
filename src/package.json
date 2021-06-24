@@ -4,6 +4,7 @@
     "type": "git",
     "url": "git+https://github.com/polytope/PolyTagsInput.git"
   },
+  "license": "MIT",
   "homepage": "https://github.com/polytope/PolyTagsInput",
   "version": "0.0.6",
   "peerDependencies": {},
