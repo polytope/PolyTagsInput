@@ -10,5 +10,6 @@
   "main": "poly-tags-input.js",
   "typings": "poly-tags-input.d.ts",
   "sideEffects": false,
-  "dependencies": {}
+  "dependencies": {},
+  "keywords": ["Tag", "Tags", "Tag Input", "Tags Input"]
 }

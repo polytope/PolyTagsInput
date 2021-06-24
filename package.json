@@ -24,7 +24,7 @@
     "build:example": "tsc && cd example && npm install && cd ..",
     "start:example": "cd example && npm run dev && cd ..",
     "start": "npm run build:example && npm run start:example",
-    "build": "tsc && copyfiles -f ./src/package.json ./dist/ && copyfiles ./README.md ./dist/",
+    "build": "tsc && copyfiles -f ./src/package.json ./dist/ && copyfiles ./README.md ./LICENSE ./dist/",
     "test": "jest",
     "lint": "eslint src/**/*.{js,ts}",
     "lint:fix": "eslint --fix src/**/*.{js,ts}"
