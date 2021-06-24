@@ -1,7 +1,11 @@
 {
   "name": "@polytope/poly-tags-input",
-  "version": "0.0.5",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/polytope/PolyTagsInput.git"
+  },
   "homepage": "https://github.com/polytope/PolyTagsInput",
+  "version": "0.0.5",
   "peerDependencies": {},
   "main": "poly-tags-input.js",
   "typings": "poly-tags-input.d.ts",
