@@ -161,9 +161,9 @@ describe('PolyTagsInput', () => {
     });
 
     it('should show typeaheads when typing in input field', (done: DoneCallback) => {
-        polyTag.setTypeaheads('John', 'Jane', 'Doe');
+        polyTag.suggestions = ['John', 'Jane', 'Doe'];
 
-        polyTag.typeahead = (suggestions: string[] | null) => {
+        polyTag.onSuggestions = (suggestions: string[] | null) => {
             expect(suggestions).toEqual(['John', 'Jane'])
             done();
         }
@@ -171,9 +171,9 @@ describe('PolyTagsInput', () => {
     });
 
    it('should send null for typeaheads if inputField is emptied', (done: DoneCallback) => {
-        polyTag.setTypeaheads('John', 'Jane', 'Doe');
+        polyTag.suggestions = ['John', 'Jane', 'Doe'];
         let count = 0;
-        polyTag.typeahead = (suggestions: string[] | null) => {
+        polyTag.onSuggestions = (suggestions: string[] | null) => {
             if (count == 1) {
                 expect(element.value).toEqual('')
                 expect(suggestions).toEqual(null)
@@ -251,8 +251,8 @@ describe('PolyTagsInput', () => {
     });
 
    it("should disregard character case when looking for typeaheads", (done: DoneCallback) => {
-       polyTag.setTypeaheads('Polytope', 'poLyTag')
-       polyTag.typeahead = (value: string[] | null) => {
+       polyTag.suggestions = ['Polytope', 'poLyTag']
+       polyTag.onSuggestions = (value: string[] | null) => {
            expect(value).toEqual(['Polytope', 'poLyTag']);
            done();
        }
@@ -260,7 +260,7 @@ describe('PolyTagsInput', () => {
    })
 
     it('should do nothing when strict-mode is activated, and trying to add a tag not part of the typeaheads', () => {
-        polyTag.setTypeaheads('Polytope', 'poLyTag')
+        polyTag.suggestions = ['Polytope', 'poLyTag']
         polyTag.strict = true
         element.value = "some tag typed in field using tab"
         hitTab(element)
@@ -281,7 +281,7 @@ describe('PolyTagsInput', () => {
             }
             count++;
         }
-        polyTag.setTypeaheads('some tag');
+        polyTag.suggestions = ['some tag'];
         polyTag.strict = true;
 
         polyTag.add('some tag')
@@ -289,7 +289,7 @@ describe('PolyTagsInput', () => {
     })
 
     it('should allow for both strict and distinct', function (done: DoneCallback) {
-        polyTag.setTypeaheads('some tag', 'some other tag');
+        polyTag.suggestions = ['some tag', 'some other tag'];
         polyTag.strict = true;
         polyTag.distinct = true;
 
@@ -319,7 +319,7 @@ describe('PolyTagsInput', () => {
     });
 
     it('should allow for switching strict mode, with out data loss', function (done: DoneCallback) {
-        polyTag.setTypeaheads('some tag', 'some other tag');
+        polyTag.suggestions = ['some tag', 'some other tag'];
         polyTag.add('some tag')
         polyTag.add('some other tag')
         polyTag.add('UNKNOWN TAG')

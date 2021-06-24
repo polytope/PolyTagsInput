@@ -8,9 +8,11 @@ const typeAheadBox = document.querySelector<HTMLDivElement>('#typeahead')!;
 
 const tagLine = new PolyTagsInput(field)
 tagLine.add('Polytope', 'Tagable', 'InputField');
-tagLine.setTypeaheads('Polytope', 'PolyTag', 'Tagable', 'InputField');
+tagLine.suggestions = ['Polytope', 'PolyTag', 'Tagable', 'InputField'];
 tagLine.onValueChanged = setTags;
-tagLine.typeahead = typeAhead;
+tagLine.onSuggestions = onSuggestions;
+tagLine.distinct = false;
+tagLine.strict = false;
 
 setTags(tagLine.value)
 
@@ -25,7 +27,7 @@ field.addEventListener('keydown', (e: KeyboardEvent) => {
 
 })
 
-function typeAhead(suggestions: string[] | null) {
+function onSuggestions(suggestions: string[] | null) {
     console.log(suggestions)
     if (suggestions == null) {
         removeSuggestions()
