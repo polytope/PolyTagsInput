@@ -62,4 +62,4 @@ jobs:
           name: dist-${{ github.sha }}
           path: dist
       - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_PUBLISH_TOKEN }}" > ./dist/.npmrc
-      - run: cd ./dist/ && npm publish --scope public
+      - run: cd ./dist/ && npm publish --access public
