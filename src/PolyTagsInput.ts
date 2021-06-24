@@ -54,7 +54,7 @@ export default class PolyTagsInput {
    * The callback function the library should call with the suggestions for the inputted value.
    * The callback can receive two types of values:
    *  - string[]: When there are matching suggestions, the callback will be invoked with an array of
-   *  the matching suggestions. test
+   *  the matching suggestions.
    *  - null: When there are no matching suggestions, the callback will be invoked with a null value.
    * @param callback - (v: string[]) => void: The callback that will be called on every change to the value.
    */
