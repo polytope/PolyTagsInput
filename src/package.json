@@ -6,7 +6,7 @@
   },
   "license": "MIT",
   "homepage": "https://github.com/polytope/PolyTagsInput",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "peerDependencies": {},
   "main": "poly-tags-input.js",
   "typings": "poly-tags-input.d.ts",
