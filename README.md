@@ -38,9 +38,9 @@ function setTags(tags: string[]): void {
 }
 ```
 
-For more in-depth example go to [the example project on github repository](https://github.com/polytope/PolyTagsInput)
+For more in-depth example go to [the example project on github repository](https://github.com/polytope/PolyTagsInput/tree/master/example)
 
-## Api
+## API
 | Command | Type | Description |
 | --- | --- | --- |
 | <code>element: HTMLInputElement</code> | GETTER | The HTML Input Element that the instance is attached to. |
