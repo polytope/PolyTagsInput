@@ -128,6 +128,9 @@ export default class PolyTagsInput {
 
   private onKeyDown(event: KeyboardEvent): void {
     if (event.key === 'Enter' || event.key === 'Tab') {
+      if (this.element.value === '' || this.element.value == null) {
+        return;
+      }
       event.preventDefault();
       const { value } = this.element;
       this.element.value = '';
