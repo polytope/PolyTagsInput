@@ -345,6 +345,12 @@ describe('PolyTagsInput', () => {
         polyTag.strict = true
     });
 
+    it('should ignore tab-press if input field is empty', function () {
+        hitTab(element);
+
+        expect(polyTag.size).toEqual(0);
+    });
+
     function hitEnter(element: HTMLInputElement) {
         sendKey(element, 'Enter', false);
     }
